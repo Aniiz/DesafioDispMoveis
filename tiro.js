@@ -11,11 +11,11 @@ function Tiro(context, nave) {
    this.nave = nave;
    // Posicionar o tiro no bico da nave | Começa na posição de x e centraliza o tiro no bico da nave
    this.largura = 3;
-   this.altura = 10;   
+   this.altura = 10;
    this.x = nave.x + 18;  // 36 / 2
    this.y = nave.y - this.altura;
    this.velocidade = 400;
-   
+
    this.cor = 'yellow';
    SOM_TIRO.currentTime = 0.0;
    SOM_TIRO.play();
@@ -36,17 +36,17 @@ Sendo:
 Podemos ajustar novas velocidades com valores maiores.*/
 
 Tiro.prototype = {
-   atualizar: function() {
+   atualizar: function () {
       //Sobe na tela, subtraindo a posição y
       this.y -= this.velocidade * this.animacao.decorrido / 1000;
-      
+
       // Excluir o tiro quando sumir da tela
       if (this.y < -this.altura) {
          this.animacao.excluirSprite(this);
          this.colisor.excluirSprite(this);
       }
    },
-   desenhar: function() {
+   desenhar: function () {
       //imgNave.src = 'image/nave.png'
       var ctx = this.context;
       //Salvar a cofiguração e subir na pilha
@@ -58,11 +58,13 @@ Tiro.prototype = {
       ctx.restore();
    },
    //Tratar colisão | Definir retângulos de colisão
-   retangulosColisao: function() {
-      return [ {x: this.x, y: this.y, largura: this.largura,
-            altura: this.altura} ];
+   retangulosColisao: function () {
+      return [{
+         x: this.x, y: this.y, largura: this.largura,
+         altura: this.altura
+      }];
    },
-   colidiuCom: function(outro) {
-   
+   colidiuCom: function (outro) {
+
    }
 }
