@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+   
+<head>
+   <title>Jogo de Nave</title>
+   <script src="animacao.js"></script>
+   <script src="teclado.js"></script>
+   <script src="colisor.js"></script>
+   <script src="fundo.js"></script>
+   <script src="nave.js"></script>
+   <script src="ovni.js"></script>
+   <script src="tiro.js"></script>
+   <script src="spritesheet.js"></script>
+   <script src="explosao.js"></script>
+   <script src="painel.js"></script>
+   <style>
+   #link_jogar {
+      /* Inicia oculto */
+      display: none;
+   
+      /* Cores e fundo */
+      color: yellow;
+      background: url(img/botao-jogar.png);
+         
+      /* Fonte */
+      font-size: 20px;
+      font-family: sans-serif;
+      
+      /* Sem sublinhado e com sombra */
+      text-decoration: none;
+      text-shadow: 2px 2px 5px black;
+         
+      /* Posicionamento */
+      position: absolute;
+      left: 220px;
+      top: 330px;
+
+      /* A imagem do botão é 72x72, descontamos os paddings 
+      (padding define uma a distância entre o conteúdo de um elemento e suas bordas)*/
+      width: 52px;
+      height: 26px;
+      padding: 23px 10px;
+   }
+   </style>
+</head>
+
+<body>
+   <!--Tag | É obrigatório ter width (largura) e height(altura)-->
+   <canvas id="canvas_animacao" width="500" height="500"></canvas>
+   
+   <a id="link_jogar" href="javascript: iniciarJogo()">Jogar</a>
+   
+   <!--Para desenhar no Canvas, é preciso executar um script após ele 
+    ter sido carregado. Neste script obteremos o contexto gráfico,
+    que é o objeto que realiza de fato as tarefas de desenho no Canvas.-->
+   <script>
+      // Canvas e Context
+      var canvas = document.getElementById('canvas_animacao');
+      var context = canvas.getContext('2d');
+
+      // Variáveis principais
+      var imagens, animacao, teclado, colisor, nave, criadorInimigos;
+      var totalImagens = 0, carregadas = 0;
+      var musicaAcao;
+      
+      // Começa carregando as imagens e músicas
+      carregarImagens();
+      carregarMusicas();
+      
+      /*Na função carregarImagens, facilita muito carregar um objeto 
+      ou array com os nomes das imagens e fazer um loop nele. Após 
+      carregar cada imagem, o nome é substituído pelo objeto da imagem.*/
+      function carregarImagens() {
+         // Objeto contendo os nomes das imagens
+         imagens = {
+            espaco:   'fundo-espaco.png', 
+            estrelas: 'fundo-estrelas.png', 
+            nuvens:   'fundo-nuvens.png', 
+            nave:     'nave-spritesheet.png', 
+            ovni:     'ovni.png',
+            explosao: 'explosao.png'
+         };
+         /*Temos que esperar todas as imagens serem carregadas.
+        Isso é feito através do evento 'onload'.
+        Definimos um contador para saber quantas já foram carregdas. 
+        Quando estiverem prontas, a aplicação pode iniciar de fato.*/
+
+         // Carregar todas
+         for (var i in imagens) {
+            var img = new Image();
+            img.src = 'img/' + imagens[i];
+            img.onload = carregando;
+            totalImagens++;
+            
+            // Substituir o nome pela imagem
+            imagens[i] = img;
+         }
+      }
+      
+      /*Função carregando vai monitorar o carregamento das imagens 
+      e iniciar a criação dos objetos quando todas estiverem prontas.*/
+      function carregando() {
+         context.save();
+         
+         // Fundo 
+         context.drawImage(imagens.espaco, 0, 0, canvas.width,
+                           canvas.height);
+         
+         // Texto "Carregando"
+         context.fillStyle = 'white';
+         context.strokeStyle = 'black';
+         context.font = '50px sans-serif';
+         context.fillText("Carregando...", 100, 200);
+         context.strokeText("Carregando...", 100, 200);
+         
+         // Barra de loading
+         carregadas++;
+         var tamanhoTotal = 300;
+         var tamanho = carregadas / totalImagens * tamanhoTotal;
+         context.fillStyle = 'yellow';
+         context.fillRect(100, 250, tamanho, 50);
+         
+         context.restore();         
+         
+         if (carregadas == totalImagens) {
+            iniciarObjetos();
+            mostrarLinkJogar();
+         }
+      }
+      
+      /*A função 'iniciarObjetos' iniciará os principais objetos do jogo.*/
+      function iniciarObjetos() {
+         // Passar o 'context' e a 'imagem' para os objetos
+         // Objetos principais
+         animacao = new Animacao(context);
+         teclado = new Teclado(document);
+         colisor = new Colisor();
+         espaco = new Fundo(context, imagens.espaco);
+         estrelas = new Fundo(context, imagens.estrelas);
+         nuvens = new Fundo(context, imagens.nuvens);
+         nave = new Nave(context, teclado, imagens.nave, 
+                         imagens.explosao);
+         painel = new Painel(context, nave);
+         
+         // Ligações entre objetos
+         animacao.novoSprite(espaco);
+         animacao.novoSprite(estrelas);
+         animacao.novoSprite(nuvens);
+         animacao.novoSprite(painel);
+         animacao.novoSprite(nave);
+         
+         colisor.novoSprite(nave);
+         animacao.novoProcessamento(colisor);
+
+         // Chamada da função configuracoesIniciais
+         configuracoesIniciais();
+      }
+      
+      /*Função configuracoesIniciais configura as velocidades dos fundos, 
+      posiciona a nave, configura o disparo pela tecla Espaço e inicia a 
+      animação*/
+      function configuracoesIniciais() {
+         // Fundos | Cada um, a uma velocidade diferente
+         espaco.velocidade = 60;
+         estrelas.velocidade = 150;
+         nuvens.velocidade = 500;
+         
+         // Nave
+         nave.posicionar();
+         nave.velocidade = 200;
+         
+         /*Vamos agora configurar a criação dos inimigos como um 
+         processamento da animação*/
+         // Inimigos
+         criacaoInimigos();
+         
+         // Game Over
+         nave.acabaramVidas = function() {
+            animacao.desligar();
+            gameOver();
+         }
+         
+         // Pontuação
+         colisor.aoColidir = function(o1, o2) {
+            // Tiro com Ovni
+            if ( (o1 instanceof Tiro && o2 instanceof Ovni) ||
+                 (o1 instanceof Ovni && o2 instanceof Tiro) )
+               painel.pontuacao += 10;
+         }
+      }
+      
+      /*Função que cria um objeto sem construtor, com o método 'processar', 
+      e insere como um processamento geral na animação.
+      
+      No método processar desse objeto, criamos um inimigo a cada 
+      segundo. Mas, para isso, necessitamos saber o instante em que o 
+      último inimigo foi gerado. Este instante é guardado no atributo 
+      'ultimoOvni' e atualizado quando o tempo decorrido ultrapassar 
+      1000 milissegundos.*/
+
+      function criacaoInimigos() {
+         criadorInimigos = {
+            ultimoOvni: new Date().getTime(),
+            
+            processar: function() {
+               var agora = new Date().getTime();
+               var decorrido = agora - this.ultimoOvni;
+               
+               if (decorrido > 1000) {
+                  novoOvni();
+                  this.ultimoOvni = agora;
+               }
+            }
+         };
+         
+         animacao.novoProcessamento(criadorInimigos);
+      }
+      
+      /*Se passar um segundo desde a geração do último inimigo, é 
+      chamada a função 'novoOvni'. Ela gera inimigos em posições e 
+      com velocidades aleatórias.*/
+      
+      function novoOvni() {
+         var imgOvni = imagens.ovni;
+         var ovni = new Ovni(context, imgOvni, imagens.explosao);
+
+         // Mínimo: 500; máximo: 1000
+         ovni.velocidade = 
+            Math.floor( 500 + Math.random() * (1000 - 500 + 1) );
+         
+         // Mínimo: 0; máximo: largura do canvas - largura do ovni   
+         ovni.x = 
+            Math.floor(Math.random() * 
+                       (canvas.width - imgOvni.width + 1) );
+                  
+         // Descontar a altura
+         ovni.y = -imgOvni.height;
+         
+         animacao.novoSprite(ovni);
+         colisor.novoSprite(ovni);
+      }
+      
+      function pausarJogo() {
+         if (animacao.ligado) {
+            animacao.desligar();
+            ativarTiro(false);
+            context.save();
+            context.fillStyle = 'white';
+            context.strokeStyle = 'black';
+            context.font = '50px sans-serif';
+            context.fillText("Pausado", 160, 200);
+            context.strokeText("Pausado", 160, 200);
+            context.restore();
+         }
+         else {
+            criadorInimigos.ultimoOvni = new Date().getTime();
+            animacao.ligar();
+            ativarTiro(true);
+         }
+      }
+      
+      function ativarTiro(ativar) {
+         if (ativar) {
+            teclado.disparou(ESPACO, function() {
+               nave.atirar();
+            });
+         }
+         else
+            teclado.disparou(ESPACO, null);
+      }
+      
+      function carregarMusicas() {
+         musicaAcao = new Audio();
+         musicaAcao.src = 'snd/musica-acao.mp3';
+         musicaAcao.volume = 0.8;
+         musicaAcao.loop = true;
+         musicaAcao.load();
+      }
+      
+      function mostrarLinkJogar() {
+         document.getElementById('link_jogar').style.display =
+            'block';
+      }
+      
+      function iniciarJogo() {
+         criadorInimigos.ultimoOvni = new Date().getTime();
+      
+         // Tiro
+         ativarTiro(true);
+         
+         // Pausa
+         teclado.disparou(ENTER, pausarJogo);
+         
+         document.getElementById('link_jogar').style.display =
+            'none';
+         musicaAcao.play();
+         animacao.ligar();
+      }
+      
+      function gameOver() {
+         // Tiro
+         ativarTiro(false);
+         
+         // Pausa
+         teclado.disparou(ENTER, null);
+         
+         // Parar a música e rebobinar
+         musicaAcao.pause();
+         musicaAcao.currentTime = 0.0;
+         
+         // Fundo
+         context.drawImage(imagens.espaco, 0, 0, canvas.width,
+                           canvas.height);
+         
+         // Texto "Game Over"
+         context.save();
+         context.fillStyle = 'white';
+         context.strokeStyle = 'black';
+         context.font = '70px sans-serif';
+         context.fillText("GAME OVER", 40, 200);
+         context.strokeText("GAME OVER", 40, 200);
+         context.restore();
+         
+         // Volta o link "Jogar"
+         mostrarLinkJogar();
+         
+         // Restaurar as condições da nave
+         nave.vidasExtras = 3;
+         nave.posicionar();
+         animacao.novoSprite(nave);
+         colisor.novoSprite(nave);
+         
+         // Tirar todos os inimigos da tela
+         removerInimigos();
+      }
+      
+      function removerInimigos() {
+         for (var i in animacao.sprites) {
+            if (animacao.sprites[i] instanceof Ovni)
+               animacao.excluirSprite(animacao.sprites[i]);
+         }
+      }
+   </script>
+</body>
+
+</html>
