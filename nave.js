@@ -19,6 +19,8 @@ function Nave(context, teclado, imagem, imgExplosao) {
    this.imgExplosao = imgExplosao;
    this.acabaramVidas = null;
    this.vidasExtras = 3;
+   this.tempoInicio = 0;
+   this.tempoLimite = 20;
 }
 /*Devemos cronometrar o movimento da 'Nave' aplicando no método 
 'atualizar', a fórmula a seguir: 
@@ -62,12 +64,20 @@ Nave.prototype = {
    - Para definir a linha a ser animada, lemos o estado das setas do teclado
    */
    desenhar: function () {
-      if (this.teclado.pressionada(SETA_ESQUERDA))
-         this.spritesheet.coluna = 1;
-      else if (this.teclado.pressionada(SETA_DIREITA))
-         this.spritesheet.coluna = 3;
-      else
+      if (this.teclado.pressionada(SETA_ESQUERDA)) {
+         this.tempoInicio += 1;
+         if (this.tempoLimite > this.tempoInicio) this.spritesheet.coluna = 1;
+         else this.spritesheet.coluna = 0;
+      }
+      else if (this.teclado.pressionada(SETA_DIREITA)) {
+         this.tempoInicio += 1;
+         if (this.tempoLimite > this.tempoInicio) this.spritesheet.coluna = 3;
+         else this.spritesheet.coluna = 4;
+      }
+      else {
          this.spritesheet.coluna = 2;
+         this.tempoInicio = 0
+      }
 
       this.spritesheet.desenhar(this.x, this.y);
       this.spritesheet.proximoQuadro();
