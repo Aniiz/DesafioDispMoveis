@@ -12,11 +12,11 @@ function Tiro(context, nave) {
    // Posicionar o tiro no bico da nave | Começa na posição de x e centraliza o tiro no bico da nave
    this.largura = 3;
    this.altura = 10;
-   this.x = nave.x + 18;  // 36 / 2
+   this.x = nave.x + nave.spritesheet.largura / 2 - 2;  // 36 / 2
    this.y = nave.y - this.altura;
    this.velocidade = 400;
-
-   this.cor = 'yellow';
+   console.log(nave.spritesheet.largura)
+   this.cor = 'red';
    SOM_TIRO.currentTime = 0.0;
    SOM_TIRO.play();
 }

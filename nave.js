@@ -12,8 +12,9 @@ function Nave(context, teclado, imagem, imgExplosao) {
    this.y = 0;
    this.velocidade = 0;
    //O sprite inicia na linha 3 e coluna 2
-   this.spritesheet = new Spritesheet(context, imagem, 3, 2);
+   this.spritesheet = new Spritesheet(context, imagem, 2, 5);
    this.spritesheet.linha = 0;
+   this.spritesheet.coluna = 0;
    this.spritesheet.intervalo = 100;
    this.imgExplosao = imgExplosao;
    this.acabaramVidas = null;
@@ -62,11 +63,11 @@ Nave.prototype = {
    */
    desenhar: function () {
       if (this.teclado.pressionada(SETA_ESQUERDA))
-         this.spritesheet.linha = 1;
+         this.spritesheet.coluna = 1;
       else if (this.teclado.pressionada(SETA_DIREITA))
-         this.spritesheet.linha = 2;
+         this.spritesheet.coluna = 3;
       else
-         this.spritesheet.linha = 0;
+         this.spritesheet.coluna = 2;
 
       this.spritesheet.desenhar(this.x, this.y);
       this.spritesheet.proximoQuadro();
@@ -81,21 +82,21 @@ Nave.prototype = {
       // Estes valores vão sendo ajustados aos poucos
       var rets =
          [
-            { x: this.x + 2, y: this.y + 19, largura: 9, altura: 13 },
-            { x: this.x + 13, y: this.y + 3, largura: 10, altura: 33 },
-            { x: this.x + 25, y: this.y + 19, largura: 9, altura: 13 }
+            { x: this.x + 2, y: this.y + 17, largura: 8, altura: 10 },
+            { x: this.x + 21, y: this.y + 17, largura: 8, altura: 10 },
+            { x: this.x + 11, y: this.y, largura: 10, altura: 33 }
          ];
 
       // Desenhando os retângulos para visualização | Comentar após concluir modificações
-      //var ctx = this.context;
+      var ctx = this.context;
 
-      //for (var i in rets) {
-      //ctx.save();
-      //ctx.strokeStyle = 'yellow';
-      //ctx.strokeRect(rets[i].x, rets[i].y, rets[i].largura, 
-      //rets[i].altura);
-      //ctx.restore();
-      //}
+      // for (var i in rets) {
+      //    ctx.save();
+      //    ctx.strokeStyle = 'red';
+      //    ctx.strokeRect(rets[i].x, rets[i].y, rets[i].largura,
+      //       rets[i].altura);
+      //    ctx.restore();
+      // }
 
       return rets;
    },//Não esquecer dessa vírgula sempre que for criar um novo método.
