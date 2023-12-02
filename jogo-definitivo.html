@@ -73,13 +73,14 @@
       function carregarImagens() {
          // Objeto contendo os nomes das imagens
          imagens = {
-            espaco: 'fundo-espaco.png',
+            espaco: 'fundo-espaco-novo.png',
             estrelas: 'fundo-estrelas.png',
             nuvens: 'fundo-nuvens.png',
             nave: 'nave-spritesheet-novo.png',
             ovni: 'ovni.png',
             explosao: 'explosao.png'
          };
+
          /*Temos que esperar todas as imagens serem carregadas.
         Isso é feito através do evento 'onload'.
         Definimos um contador para saber quantas já foram carregdas. 
@@ -163,7 +164,7 @@
          // Fundos | Cada um, a uma velocidade diferente
          espaco.velocidade = 60;
          estrelas.velocidade = 150;
-         nuvens.velocidade = 500;
+         nuvens.velocidade = 700;
 
          // Nave
          nave.posicionar();
@@ -206,7 +207,7 @@
                var agora = new Date().getTime();
                var decorrido = agora - this.ultimoOvni;
 
-               if (decorrido > 1000) {
+               if (decorrido > 500) {
                   novoOvni();
                   this.ultimoOvni = agora;
                }
@@ -325,19 +326,23 @@
          mostrarLinkJogar();
 
          // Restaurar as condições da nave
-         nave.vidasExtras = 3;
+         nave.vidasExtras = 0;
          nave.posicionar();
          animacao.novoSprite(nave);
          colisor.novoSprite(nave);
+         painel.pontuacao = 0
 
          // Tirar todos os inimigos da tela
-         removerInimigos();
+         // animacao.limparMapa()
+         removerInimigos()
       }
 
       function removerInimigos() {
          for (var i in animacao.sprites) {
-            if (animacao.sprites[i] instanceof Ovni)
-               animacao.excluirSprite(animacao.sprites[i]);
+            if (animacao.sprites[i] instanceof Ovni) {
+               animacao.excluirSprite(animacao.sprites[i])
+               animacao.excluirProcessamento(animacao.sprites[i])
+            };
          }
       }
    </script>

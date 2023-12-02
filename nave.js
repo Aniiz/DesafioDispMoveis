@@ -12,13 +12,13 @@ function Nave(context, teclado, imagem, imgExplosao) {
    this.y = 0;
    this.velocidade = 0;
    //O sprite inicia na linha 3 e coluna 2
-   this.spritesheet = new Spritesheet(context, imagem, 2, 5);
+   this.spritesheet = new Spritesheet(context, imagem, 2, 5, 0, 3);
    this.spritesheet.linha = 0;
    this.spritesheet.coluna = 0;
    this.spritesheet.intervalo = 100;
    this.imgExplosao = imgExplosao;
    this.acabaramVidas = null;
-   this.vidasExtras = 3;
+   this.vidasExtras = 0;
    this.tempoInicio = 0;
    this.tempoLimite = 20;
 }

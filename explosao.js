@@ -11,30 +11,30 @@ function Explosao(context, imagem, x, y) {
    this.imagem = imagem;
 
    //Definindo o quadro do spritesheet | linha 1 e coluna 5
-   this.spritesheet = new Spritesheet(context, imagem, 1, 5);
+   this.spritesheet = new Spritesheet(context, imagem, 1, 5, 0, 0);
    //Definir um intervalo de tempo para mudança de quadro
-   this.spritesheet.intervalo = 75;
+   this.spritesheet.intervalo = 100;
    this.x = x;
    this.y = y;
    this.animando = false;
-   
+
    var explosao = this;
    this.fimDaExplosao = null;
-   this.spritesheet.fimDoCiclo = function() {
+   this.spritesheet.fimDoCiclo = function () {
       explosao.animacao.excluirSprite(explosao);
       if (explosao.fimDaExplosao) explosao.fimDaExplosao();
    }
-   
+
    SOM_EXPLOSAO.currentTime = 0.0;
    SOM_EXPLOSAO.play();
 }
 Explosao.prototype = {
-   atualizar: function() {
-      
+   atualizar: function () {
+
    },//Não esquecer dessa vírgula sempre que for criar um novo método.
    //Desenhamos o quadro atual e animamos a spritesheet
-   desenhar: function() {
+   desenhar: function () {
       this.spritesheet.desenhar(this.x, this.y);
-      this.spritesheet.proximoQuadro();
+      this.spritesheet.proximoQuadro(true);
    }
 }

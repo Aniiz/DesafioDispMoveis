@@ -15,7 +15,6 @@ function Tiro(context, nave) {
    this.x = nave.x + nave.spritesheet.largura / 2 - 2;  // 36 / 2
    this.y = nave.y - this.altura;
    this.velocidade = 400;
-   console.log(nave.spritesheet.largura)
    this.cor = 'red';
    SOM_TIRO.currentTime = 0.0;
    SOM_TIRO.play();

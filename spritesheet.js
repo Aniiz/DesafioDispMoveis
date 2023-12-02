@@ -9,40 +9,61 @@ de linhas e colunas;
 • Gerenciar o tempo entre um quadro e outro. 
 
 */
-function Spritesheet(context, imagem, linhas, colunas) {
+function Spritesheet(context, imagem, linhas, colunas, iniLine, initCol) {
    this.context = context;
    this.imagem = imagem;
    this.numLinhas = linhas;
    this.numColunas = colunas;
    this.intervalo = 0;
-   this.linha = 0;
-   this.coluna = 0;
+   this.linha = iniLine;
+   this.coluna = initCol;
    this.fimDoCilo = null;
    this.largura = null
    this.altura = null
 }
 Spritesheet.prototype = {
-   proximoQuadro: function () {
+   proximoQuadro: function (horizontal) {
       var agora = new Date().getTime();
 
       // Se ainda não tem último tempo medido 
       if (!this.ultimoTempo) this.ultimoTempo = agora;
 
-      // Já é hora de mudar de coluna? 
-      if (agora - this.ultimoTempo < this.intervalo) return;
+      if (horizontal) {
 
-      if (this.linha < this.numLinhas - 1) {
-         this.linha++;
+         // Já é hora de mudar de coluna? 
+         if (agora - this.ultimoTempo < this.intervalo) return;
+
+         if (this.coluna < this.numColunas - 1) {
+            this.coluna++;
+         }
+         else {
+            this.linha = 0;
+
+            // Avisar que acabou um ciclo!
+            if (this.fimDoCiclo) this.fimDoCiclo();
+         }
+
+         // Guardar hora da última mudança
+         this.ultimoTempo = agora;
+      } else {
+
+         // Já é hora de mudar de coluna? 
+         if (agora - this.ultimoTempo < this.intervalo) return;
+
+         if (this.linha < this.numLinhas - 1) {
+            this.linha++;
+         }
+         else {
+            this.linha = 0;
+
+            // Avisar que acabou um ciclo!
+            if (this.fimDoCiclo) this.fimDoCiclo();
+         }
+
+         // Guardar hora da última mudança
+         this.ultimoTempo = agora;
       }
-      else {
-         this.linha = 0;
 
-         // Avisar que acabou um ciclo!
-         if (this.fimDoCiclo) this.fimDoCiclo();
-      }
-
-      // Guardar hora da última mudança
-      this.ultimoTempo = agora;
    },//Não esquecer dessa vírgula sempre que for criar um novo método.
 
    //Animar spritesheet

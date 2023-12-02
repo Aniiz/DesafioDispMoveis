@@ -20,16 +20,16 @@ function Animacao(context) {
 Todas as instâncias usarão as mesmas cópisas de cada método.
 A apalavra 'prototype' funciona como se fosse um atributo da função construtora.*/
 Animacao.prototype = {
-   novoSprite: function(sprite) {
+   novoSprite: function (sprite) {
       this.sprites.push(sprite);
       sprite.animacao = this;
    },//Não esquecer dessa vírgula sempre que for criar um novo método.
-   ligar: function() {
+   ligar: function () {
       this.ultimoCiclo = 0;
       this.ligado = true;
       this.proximoFrame();
    },//Não esquecer dessa vírgula sempre que for criar um novo método.
-   desligar: function() {
+   desligar: function () {
       this.ligado = false;
    },//Não esquecer dessa vírgula sempre que for criar um novo método.
 
@@ -37,29 +37,35 @@ Animacao.prototype = {
    do relógio do computador (dado por Date.getTime() em 
    milissegundos) e calculamos a diferença entre esse instante 
    e o instante do ciclo anterior.*/
-   proximoFrame: function() {
+   proximoFrame: function () {
       // Posso continuar?
-      if ( ! this.ligado ) return;
-      
+      if (!this.ligado) return;
+
       var agora = new Date().getTime();
       if (this.ultimoCiclo == 0) this.ultimoCiclo = agora;
       this.decorrido = agora - this.ultimoCiclo;
 
       // Atualizamos o estado dos sprites
-      for (var i in this.sprites)
-         this.sprites[i].atualizar();
+      for (var i in this.sprites) {
+         if (this.sprites[i]) {
+            this.sprites[i].atualizar();
+         }
+      }
 
       // Desenhamos os sprites
-      for (var i in this.sprites)
-         this.sprites[i].desenhar();
-         
+      for (var i in this.sprites) {
+         if (this.sprites[i]) {
+            this.sprites[i].desenhar();
+         }
+      }
+
       // Processamentos gerais
       for (var i in this.processamentos)
          this.processamentos[i].processar();
-         
+
       // Processamento de exclusões
       this.processarExclusoes();
-      
+
       // Atualizar o instante do último ciclo antes de chamar o próximo ciclo.
       this.ultimoCiclo = agora;
 
@@ -71,44 +77,55 @@ Animacao.prototype = {
       da mesma forma que faríamos caso usássemos o conhecido 
       setTimeout*/
       var animacao = this;
-      requestAnimationFrame(function() {
+      requestAnimationFrame(function () {
          animacao.proximoFrame();
       });
       //Agora os sprites sabem quanto tempo levou entre um ciclo e outro
    },//Não esquecer dessa vírgula sempre que for criar um novo método.
-   novoProcessamento: function(processamento) {
+   novoProcessamento: function (processamento) {
       this.processamentos.push(processamento);
       processamento.animacao = this;
    },
-   excluirSprite: function(sprite) {
+   excluirSprite: function (sprite) {
       this.spritesExcluir.push(sprite);
    },//Não esquecer dessa vírgula sempre que for criar um novo método.
-   excluirProcessamento: function(processamento) {
+   excluirProcessamento: function (processamento) {
       this.processamentosExcluir.push(processamento);
    },//Não esquecer dessa vírgula sempre que for criar um novo método.
-   processarExclusoes: function() {
+   processarExclusoes: function () {
       // Criar novos arrays
       var novoSprites = [];
       var novoProcessamentos = [];
-      
+
       // Adicionar somente se não constar no array de excluídos
       for (var i in this.sprites) {
-         if (this.spritesExcluir.indexOf(this.sprites[i]) == -1)
+         if (this.spritesExcluir.indexOf(this.sprites[i]) == -1) {
+            // console.log(this.spritesExcluir)
             novoSprites.push(this.sprites[i]);
+            // console.log(this.sprites)
+         }
       }
-      
+
       for (var i in this.processamentos) {
          if (this.processamentosExcluir.indexOf(this.processamentos[i])
-             == -1)
+            == -1) {
+            // console.log(this.processamentosExcluir)
             novoProcessamentos.push(this.processamentos[i]);
+         }
       }
-      
+
       // Limpar os arrays de exclusões
       this.spritesExcluir = [];
       this.processamentosExcluir = [];
-      
+
       // Substituir os arrays velhos pelos novos
       this.sprites = novoSprites;
       this.processamentos = novoProcessamentos;
+   },
+   limparMapa: function () {
+      console.log(this.processamentos)
+      this.sprites = this.sprites.filter(sprite => !(sprite instanceof Ovni || sprite instanceof Explosao || sprite instanceof Tiro));
+      // this.processamentos = []
+      console.log(this.processamentos)
    }
 }
