@@ -13,7 +13,7 @@ function Tiro(context, nave) {
    this.largura = 3;
    this.altura = 10;
    this.x = nave.x + nave.spritesheet.largura / 2 - 2;  // 36 / 2
-   this.y = nave.y - this.altura;
+   this.y = nave.y + nave.spritesheet.altura;
    this.velocidade = 400;
    this.cor = 'red';
    SOM_TIRO.currentTime = 0.0;
@@ -37,10 +37,10 @@ Podemos ajustar novas velocidades com valores maiores.*/
 Tiro.prototype = {
    atualizar: function () {
       //Sobe na tela, subtraindo a posição y
-      this.y -= this.velocidade * this.animacao.decorrido / 1000;
+      this.y += this.velocidade * this.animacao.decorrido / 1000;
 
       // Excluir o tiro quando sumir da tela
-      if (this.y < -this.altura) {
+      if (this.y > 510) {
          this.animacao.excluirSprite(this);
          this.colisor.excluirSprite(this);
       }

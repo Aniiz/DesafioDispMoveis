@@ -18,7 +18,7 @@ function Nave(context, teclado, imagem, imgExplosao) {
    this.spritesheet.intervalo = 100;
    this.imgExplosao = imgExplosao;
    this.acabaramVidas = null;
-   this.vidasExtras = 0;
+   this.vidasExtras = 3;
    this.tempoInicio = 0;
    this.tempoLimite = 20;
 }
@@ -79,7 +79,7 @@ Nave.prototype = {
          this.tempoInicio = 0
       }
 
-      this.spritesheet.desenhar(this.x, this.y);
+      this.spritesheet.desenhar(this.x, this.y, true);
       this.spritesheet.proximoQuadro();
    },//Não esquecer dessa vírgula sempre que for criar um novo método.
    atirar: function () {
@@ -151,7 +151,7 @@ Nave.prototype = {
    posicionar: function () {
       var canvas = this.context.canvas;
       this.x = canvas.width / 2 - 18;  // 36 / 2
-      this.y = canvas.height - 48;
+      this.y = 10;
    }
 }
 

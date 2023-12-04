@@ -67,12 +67,18 @@ Spritesheet.prototype = {
    },//Não esquecer dessa vírgula sempre que for criar um novo método.
 
    //Animar spritesheet
-   desenhar: function (x, y) {
+   desenhar: function (x, y, espelharVerticalmente) {
       var largura = this.imagem.width / this.numColunas;
       var altura = this.imagem.height / this.numLinhas;
 
-      this.largura = largura
-      this.altura = altura
+      this.largura = largura;
+      this.altura = altura;
+
+      // Inverte a escala verticalmente se espelharVerticalmente for true
+      if (espelharVerticalmente) {
+         this.context.scale(1, -1);
+         y = -y - altura; // Ajusta a posição Y para compensar a inversão
+      }
 
       this.context.drawImage(
          this.imagem,
@@ -85,5 +91,10 @@ Spritesheet.prototype = {
          largura,
          altura
       );
+
+      // Restaura a escala para o estado original
+      if (espelharVerticalmente) {
+         this.context.scale(1, -1);
+      }
    }
 }

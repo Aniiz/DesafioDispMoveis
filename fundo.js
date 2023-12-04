@@ -24,25 +24,25 @@ Podemos ajustar novas velocidades com valores maiores na função
 'configuracoesIniciais' da página HTML.*/
 
 Fundo.prototype = {
-   atualizar: function() {
+   atualizar: function () {
       // Atualizar a posição de emenda
-      this.posicaoEmenda += 
+      this.posicaoEmenda -=
          this.velocidade * this.animacao.decorrido / 1000;
-      
-      // Emenda passou da posição
-      if (this.posicaoEmenda > this.imagem.height)
-         this.posicaoEmenda = 0;
+
+      // Emenda passou da posição superior
+      if (this.posicaoEmenda < 0)
+         this.posicaoEmenda = this.imagem.height;
    },//Não esquecer dessa vírgula sempre que for criar um novo método.
-   desenhar: function() {
+   desenhar: function () {
       var img = this.imagem;  // Para facilitar a escrita
-      
+
       // Primeira cópia
       var posicaoY = this.posicaoEmenda - img.height;
       this.context.drawImage(img, 0, posicaoY, img.width, img.height);
-      
+
       // Segunda cópia
       posicaoY = this.posicaoEmenda;
-      this.context.drawImage(img, 0, posicaoY, img.width, img.height);     
+      this.context.drawImage(img, 0, posicaoY, img.width, img.height);
    }
 }
 

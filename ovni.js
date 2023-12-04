@@ -27,10 +27,10 @@ Podemos ajustar novas velocidades com valores maiores em
 
 Ovni.prototype = {
    atualizar: function () {
-      this.y +=
+      this.y -=
          this.velocidade * this.animacao.decorrido / 1000;
 
-      if (this.y > this.context.canvas.height) {
+      if (this.y < (- this.imagem.height)) {
          this.animacao.excluirSprite(this);
          this.colisor.excluirSprite(this);
       }

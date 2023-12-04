@@ -13,7 +13,7 @@ function Explosao(context, imagem, x, y) {
    //Definindo o quadro do spritesheet | linha 1 e coluna 5
    this.spritesheet = new Spritesheet(context, imagem, 1, 5, 0, 0);
    //Definir um intervalo de tempo para mudança de quadro
-   this.spritesheet.intervalo = 100;
+   this.spritesheet.intervalo = 75;
    this.x = x;
    this.y = y;
    this.animando = false;

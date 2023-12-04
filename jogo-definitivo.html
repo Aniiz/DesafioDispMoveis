@@ -75,7 +75,7 @@
          imagens = {
             espaco: 'fundo-espaco-novo.png',
             estrelas: 'fundo-estrelas.png',
-            nuvens: 'fundo-nuvens.png',
+            nuvens: 'fundo-nuvens-novo.png',
             nave: 'nave-spritesheet-novo.png',
             ovni: 'ovni.png',
             explosao: 'explosao.png'
@@ -163,8 +163,8 @@
       function configuracoesIniciais() {
          // Fundos | Cada um, a uma velocidade diferente
          espaco.velocidade = 60;
-         estrelas.velocidade = 150;
-         nuvens.velocidade = 700;
+         estrelas.velocidade = 300;
+         nuvens.velocidade = 1000;
 
          // Nave
          nave.posicionar();
@@ -207,7 +207,7 @@
                var agora = new Date().getTime();
                var decorrido = agora - this.ultimoOvni;
 
-               if (decorrido > 500) {
+               if (decorrido > 1100) {
                   novoOvni();
                   this.ultimoOvni = agora;
                }
@@ -235,7 +235,7 @@
                (canvas.width - imgOvni.width + 1));
 
          // Descontar a altura
-         ovni.y = -imgOvni.height;
+         ovni.y = 500;
 
          animacao.novoSprite(ovni);
          colisor.novoSprite(ovni);
@@ -326,7 +326,7 @@
          mostrarLinkJogar();
 
          // Restaurar as condições da nave
-         nave.vidasExtras = 0;
+         nave.vidasExtras = 3;
          nave.posicionar();
          animacao.novoSprite(nave);
          colisor.novoSprite(nave);
