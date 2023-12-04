@@ -92,9 +92,9 @@ Nave.prototype = {
       // Estes valores vão sendo ajustados aos poucos
       var rets =
          [
-            { x: this.x + 2, y: this.y + 17, largura: 8, altura: 10 },
-            { x: this.x + 21, y: this.y + 17, largura: 8, altura: 10 },
-            { x: this.x + 11, y: this.y, largura: 10, altura: 33 }
+            { x: this.x + 2, y: this.y + 12, largura: 8, altura: 10 },
+            { x: this.x + 21, y: this.y + 12, largura: 8, altura: 10 },
+            { x: this.x + 11, y: this.y + 5, largura: 10, altura: 33 }
          ];
 
       // Desenhando os retângulos para visualização | Comentar após concluir modificações
