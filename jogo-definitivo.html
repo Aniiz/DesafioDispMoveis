@@ -333,7 +333,6 @@
          painel.pontuacao = 0
 
          // Tirar todos os inimigos da tela
-         // animacao.limparMapa()
          removerInimigos()
       }
 
@@ -341,7 +340,6 @@
          for (var i in animacao.sprites) {
             if (animacao.sprites[i] instanceof Ovni) {
                animacao.excluirSprite(animacao.sprites[i])
-               animacao.excluirProcessamento(animacao.sprites[i])
             };
          }
       }

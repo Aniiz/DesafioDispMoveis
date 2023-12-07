@@ -100,16 +100,13 @@ Animacao.prototype = {
       // Adicionar somente se não constar no array de excluídos
       for (var i in this.sprites) {
          if (this.spritesExcluir.indexOf(this.sprites[i]) == -1) {
-            // console.log(this.spritesExcluir)
             novoSprites.push(this.sprites[i]);
-            // console.log(this.sprites)
          }
       }
 
       for (var i in this.processamentos) {
          if (this.processamentosExcluir.indexOf(this.processamentos[i])
             == -1) {
-            // console.log(this.processamentosExcluir)
             novoProcessamentos.push(this.processamentos[i]);
          }
       }
@@ -122,10 +119,4 @@ Animacao.prototype = {
       this.sprites = novoSprites;
       this.processamentos = novoProcessamentos;
    },
-   limparMapa: function () {
-      console.log(this.processamentos)
-      this.sprites = this.sprites.filter(sprite => !(sprite instanceof Ovni || sprite instanceof Explosao || sprite instanceof Tiro));
-      // this.processamentos = []
-      console.log(this.processamentos)
-   }
 }
