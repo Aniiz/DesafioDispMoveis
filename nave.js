@@ -92,21 +92,21 @@ Nave.prototype = {
       // Estes valores vão sendo ajustados aos poucos
       var rets =
          [
-            { x: this.x + 2, y: this.y + 12, largura: 8, altura: 10 },
-            { x: this.x + 21, y: this.y + 12, largura: 8, altura: 10 },
-            { x: this.x + 11, y: this.y + 5, largura: 10, altura: 33 }
+            { tipo: 'retangulo', x: this.x + 2, y: this.y + 12, largura: 8, altura: 10 },
+            { tipo: 'retangulo', x: this.x + 21, y: this.y + 12, largura: 8, altura: 10 },
+            { tipo: 'retangulo', x: this.x + 11, y: this.y + 5, largura: 10, altura: 33 }
          ];
 
       // Desenhando os retângulos para visualização | Comentar após concluir modificações
       var ctx = this.context;
 
-      // for (var i in rets) {
-      //    ctx.save();
-      //    ctx.strokeStyle = 'red';
-      //    ctx.strokeRect(rets[i].x, rets[i].y, rets[i].largura,
-      //       rets[i].altura);
-      //    ctx.restore();
-      // }
+      for (var i in rets) {
+         ctx.save();
+         ctx.strokeStyle = 'red';
+         ctx.strokeRect(rets[i].x, rets[i].y, rets[i].largura,
+            rets[i].altura);
+         ctx.restore();
+      }
 
       return rets;
    },//Não esquecer dessa vírgula sempre que for criar um novo método.

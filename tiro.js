@@ -59,7 +59,7 @@ Tiro.prototype = {
    //Tratar colisão | Definir retângulos de colisão
    retangulosColisao: function () {
       return [{
-         x: this.x, y: this.y, largura: this.largura,
+         tipo: 'retangulo', x: this.x, y: this.y, largura: this.largura,
          altura: this.altura
       }];
    },

@@ -72,11 +72,40 @@ Colisor.prototype = {
 
    //Fórmula para detectar colisões entre sprites
    retangulosColidem: function (ret1, ret2) {
+      if (ret1.tipo === 'retangulo' && ret2.tipo === 'retangulo') {
+         return (ret1.x + ret1.largura) > ret2.x &&
+            ret1.x < (ret2.x + ret2.largura) &&
+            (ret1.y + ret1.altura) > ret2.y &&
+            ret1.y < (ret2.y + ret2.altura);
+      } else if (ret1.tipo === 'circulo' && ret2.tipo === 'circulo') {
+         const distanciaX = ret1.x - ret2.x;
+         const distanciaY = ret1.y - ret2.y;
+         const distancia = Math.sqrt(distanciaX * distanciaX + distanciaY * distanciaY);
+         return distancia < ret1.raio + ret2.raio;
+      } else if (ret1.tipo === 'retangulo' && ret2.tipo === 'circulo') {
+         let maisProximoX = Math.max(ret1.x, Math.min(ret2.x, ret1.x + ret1.largura));
+         let maisProximoY = Math.max(ret1.y, Math.min(ret2.y, ret1.y + ret1.altura));
+
+         let distanciaX = ret2.x - maisProximoX;
+         let distanciaY = ret2.y - maisProximoY;
+         let distancia = Math.sqrt(distanciaX * distanciaX + distanciaY * distanciaY);
+
+         return distancia < ret2.raio;
+      } else if (ret1.tipo === 'circulo' && ret2.tipo === 'retangulo') {
+         let maisProximoX = Math.max(ret2.x, Math.min(ret1.x, ret2.x + ret2.largura));
+         let maisProximoY = Math.max(ret2.y, Math.min(ret1.y, ret2.y + ret2.altura));
+
+         let distanciaX = ret1.x - maisProximoX;
+         let distanciaY = ret1.y - maisProximoY;
+         let distancia = Math.sqrt(distanciaX * distanciaX + distanciaY * distanciaY);
+
+         return distancia < ret1.raio;;
+      }
       // Fórmula de interseção de retângulos
-      return (ret1.x + ret1.largura) > ret2.x &&
-         ret1.x < (ret2.x + ret2.largura) &&
-         (ret1.y + ret1.altura) > ret2.y &&
-         ret1.y < (ret2.y + ret2.altura);
+      // return (ret1.x + ret1.largura) > ret2.x &&
+      //    ret1.x < (ret2.x + ret2.largura) &&
+      //    (ret1.y + ret1.altura) > ret2.y &&
+      //    ret1.y < (ret2.y + ret2.altura);
    },
    stringUnica: function (sprite) {
       var str = '';

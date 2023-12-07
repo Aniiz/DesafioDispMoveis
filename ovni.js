@@ -57,20 +57,20 @@ Ovni.prototype = {
       // Desenhando os retângulos para visualização | Comentar após realizar modificações
       var ctx = this.context;
 
-      // for (var i in formas) {
-      //    ctx.save();
-      //    ctx.strokeStyle = 'yellow';
+      for (var i in formas) {
+         ctx.save();
+         ctx.strokeStyle = 'yellow';
 
-      //    if (formas[i].tipo === 'retangulo') {
-      //       ctx.strokeRect(formas[i].x, formas[i].y, formas[i].largura, formas[i].altura);
-      //    } else if (formas[i].tipo === 'circulo') {
-      //       ctx.beginPath();
-      //       ctx.arc(formas[i].x, formas[i].y, formas[i].raio, 0, 2 * Math.PI);
-      //       ctx.stroke();
-      //    }
+         if (formas[i].tipo === 'retangulo') {
+            ctx.strokeRect(formas[i].x, formas[i].y, formas[i].largura, formas[i].altura);
+         } else if (formas[i].tipo === 'circulo') {
+            ctx.beginPath();
+            ctx.arc(formas[i].x, formas[i].y, formas[i].raio, 0, 2 * Math.PI);
+            ctx.stroke();
+         }
 
-      //    ctx.restore();
-      // }
+         ctx.restore();
+      }
 
       return formas;
    },//Não esquecer dessa vírgula sempre que for criar um novo método.
